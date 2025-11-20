@@ -211,6 +211,7 @@ const styles = StyleSheet.create({
   },
   menuContent: {
     padding: theme.spacing.md,
+    paddingBottom: 48,
   },
   menuItem: {
     paddingVertical: theme.spacing.md,

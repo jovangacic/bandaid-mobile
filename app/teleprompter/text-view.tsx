@@ -2,13 +2,13 @@ import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Dimensions,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
+    Dimensions,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native';
 import { useSettings } from '../context/SettingsContext';
 import { useTexts } from '../context/TextContext';
@@ -30,6 +30,7 @@ export default function TextView() {
   const touchStartYRef = useRef(0);
   const touchStartXRef = useRef(0);
   const hasDraggedRef = useRef(false);
+  const wasScrollingBeforeDragRef = useRef(false); // Track if autoscrolling was active before manual scroll
 
   // Find the text by id and current index
   const currentIndex = texts.findIndex(t => t.id === id);
@@ -152,9 +153,18 @@ export default function TextView() {
   };
 
   const handleScrollBeginDrag = () => {
+    // Remember if autoscrolling was active before manual scroll
+    wasScrollingBeforeDragRef.current = isScrolling;
     // Pause auto-scroll when user starts dragging
     if (isScrolling) {
       setIsScrolling(false);
+    }
+  };
+
+  const handleScrollEndDrag = () => {
+    // Resume autoscrolling if it was active before manual scroll
+    if (wasScrollingBeforeDragRef.current) {
+      setIsScrolling(true);
     }
   };
 
@@ -233,6 +243,7 @@ export default function TextView() {
           onContentSizeChange={(width, height) => setContentHeight(height)}
           onLayout={(event) => setScrollViewHeight(event.nativeEvent.layout.height)}
           onScrollBeginDrag={handleScrollBeginDrag}
+          onScrollEndDrag={handleScrollEndDrag}
           onScroll={handleScroll}
           scrollEventThrottle={16}
         >
@@ -331,7 +342,7 @@ const styles = StyleSheet.create({
   },
   speedIndicator: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 60,
     right: 20,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     paddingHorizontal: 12,

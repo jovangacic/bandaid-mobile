@@ -1,17 +1,16 @@
-import MaskedView from '@react-native-masked-view/masked-view';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import FloatingActionButton from '../components/FloatingActionButton';
+import GradientText from '../components/GradientText';
 import Layout from '../components/Layout';
 import SideMenu from '../components/SideMenu';
 import TextList from '../components/TextList';
 import TextSelectionModal from '../components/TextSelectionModal';
 import { usePlaylists } from '../context/PlaylistContext';
 import { useTexts } from '../context/TextContext';
-import theme from '../theme/colors';
+import theme, { colors } from '../theme/colors';
 
 export default function PlaylistDetailScreen() {
   const router = useRouter();
@@ -93,23 +92,13 @@ export default function PlaylistDetailScreen() {
             <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
 
-          <MaskedView
-            style={styles.titleContainer}
-            maskElement={
-              <Text style={styles.title} numberOfLines={1}>{playlist.name}</Text>
-            }
-          >
-            <LinearGradient
-              colors={[theme.colors.primaryDark, theme.colors.primary, theme.colors.accent]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradient}
-            >
-              <Text style={[styles.title, styles.transparentText]} numberOfLines={1}>
-                {playlist.name}
-              </Text>
-            </LinearGradient>
-          </MaskedView>
+          <View style={styles.titleContainer}>
+            <GradientText
+              text={playlist.name}
+              colors={[colors.purple[700], colors.orange[400]]}
+              style={styles.title}
+            />
+          </View>
 
           <TouchableOpacity
             style={styles.menuButton}
@@ -147,7 +136,7 @@ export default function PlaylistDetailScreen() {
           />
         )}
 
-        <FloatingActionButton onPress={handleAddTexts} />
+        <FloatingActionButton onPress={handleAddTexts} hasBottomNav={true} />
         <SideMenu visible={menuVisible} onClose={() => setMenuVisible(false)} />
         
         <TextSelectionModal
@@ -183,16 +172,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: theme.spacing.md,
   },
-  gradient: {
-    paddingHorizontal: theme.spacing.lg,
-  },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: theme.colors.text,
-  },
-  transparentText: {
-    opacity: 0,
   },
   menuButton: {
     padding: theme.spacing.sm,

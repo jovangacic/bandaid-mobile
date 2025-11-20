@@ -90,8 +90,8 @@ const styles = StyleSheet.create({
     opacity: 0,
   },
   logo: {
-    width: 140,
-    height: 140,
+    width: theme.isTablet ? 210 : 140,
+    height: theme.isTablet ? 210 : 140,
   },
   text: {
     fontSize: 16,

@@ -127,12 +127,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   editButton: {
-    padding: theme.spacing.sm,
+    padding: theme.isTablet ? theme.spacing.md : theme.spacing.sm + 2,
     backgroundColor: theme.colors.primary + '20',
     borderRadius: theme.borderRadius.md,
+    minWidth: theme.isTablet ? 48 : 40,
+    minHeight: theme.isTablet ? 48 : 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   editIcon: {
-    fontSize: 18,
+    fontSize: theme.isTablet ? 26 : 22,
     color: theme.colors.primary,
   },
   emptyContainer: {

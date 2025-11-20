@@ -1,13 +1,13 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
-    Image,
-    Linking,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import GradientText from './components/GradientText';
 import Layout from './components/Layout';
@@ -49,7 +49,7 @@ export default function AboutScreen() {
             <GradientText
                 text="bandaid"
                 colors={[colors.purple[700], colors.orange[400]]}
-                style={{ fontSize: 40 }}   
+                style={{ fontSize: theme.typography.displayLarge }}   
                 >
             </GradientText>         
             <TouchableOpacity onPress={() => handleOpenLink('https://bend.rs')}>
@@ -171,10 +171,10 @@ const styles = StyleSheet.create({
   },
   backText: {
     color: theme.colors.accent,
-    fontSize: 16,
+    fontSize: theme.typography.bodyMedium,
   },
   title: {
-    fontSize: 20,
+    fontSize: theme.typography.heading3,
     fontWeight: 'bold',
     color: theme.colors.text,
   },
@@ -194,8 +194,8 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: theme.isTablet ? 180 : 120,
+    height: theme.isTablet ? 180 : 120,
     marginBottom: theme.spacing.lg,
   },
   appName: {
@@ -204,20 +204,20 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
   },
   appProvider: {
-    fontSize: 16,
+    fontSize: theme.typography.bodyMedium,
     color: theme.colors.accent,
     fontStyle: 'italic',
     textDecorationLine: 'underline',
     marginBottom: theme.spacing.sm,
   },
   appTagline: {
-    fontSize: 16,
+    fontSize: theme.typography.bodyMedium,
     color: theme.colors.textMuted,
     marginTop: theme.spacing.xs,
     marginBottom: theme.spacing.sm,
   },
   version: {
-    fontSize: 14,
+    fontSize: theme.typography.bodySmall,
     color: theme.colors.textMuted,
     backgroundColor: theme.colors.backgroundLight,
     paddingHorizontal: theme.spacing.md,
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.xl,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: theme.typography.heading4,
     fontWeight: 'bold',
     color: theme.colors.primary,
     marginBottom: theme.spacing.md,
@@ -236,9 +236,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   description: {
-    fontSize: 16,
+    fontSize: theme.typography.bodyMedium,
     color: theme.colors.text,
-    lineHeight: 24,
+    lineHeight: theme.typography.bodyMedium * 1.5,
   },
   featureList: {
     gap: theme.spacing.sm,
@@ -256,20 +256,20 @@ const styles = StyleSheet.create({
     borderLeftColor: theme.colors.accent,
   },
   toolName: {
-    fontSize: 18,
+    fontSize: theme.typography.heading4,
     fontWeight: 'bold',
     color: theme.colors.text,
     marginBottom: theme.spacing.xs,
   },
   toolDescription: {
-    fontSize: 15,
+    fontSize: theme.typography.label,
     color: theme.colors.textMuted,
-    lineHeight: 22,
+    lineHeight: theme.typography.label * 1.47,
   },
   comingSoonItem: {
-    fontSize: 15,
+    fontSize: theme.typography.label,
     color: theme.colors.textMuted,
-    lineHeight: 24,
+    lineHeight: theme.typography.label * 1.6,
   },
   linkButton: {
     flexDirection: 'row',
@@ -281,18 +281,18 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.sm,
   },
   linkText: {
-    fontSize: 16,
+    fontSize: theme.typography.bodyMedium,
     color: theme.colors.text,
   },
   linkIcon: {
-    fontSize: 24,
+    fontSize: theme.typography.heading2,
     color: theme.colors.primary,
     fontWeight: 'bold',
   },
   creditsText: {
-    fontSize: 14,
+    fontSize: theme.typography.bodySmall,
     color: theme.colors.textMuted,
-    lineHeight: 22,
+    lineHeight: theme.typography.bodySmall * 1.57,
     marginBottom: theme.spacing.xs,
   },
   footer: {
@@ -303,8 +303,8 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.lg,
   },
   copyright: {
-    fontSize: 12,
+    fontSize: theme.typography.caption,
     color: theme.colors.textMuted,
-    lineHeight: 18,
+    lineHeight: theme.typography.caption * 1.5,
   },
 });

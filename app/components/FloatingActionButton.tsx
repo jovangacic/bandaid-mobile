@@ -12,9 +12,12 @@ interface FloatingActionButtonProps {
 
 export default function FloatingActionButton({ onPress, icon = '+', hasBottomNav = false }: FloatingActionButtonProps) {
   // Calculate bottom position: base spacing + bottom nav height + extra spacing if nav is present
+  // Mobile uses larger spacing, tablet uses standard spacing + extra padding
+  const extraTabletSpacing = theme.isTablet ? theme.spacing.xl : 0;
+  const baseSpacing = theme.isTablet ? theme.spacing.lg : theme.spacing.xl; // xl on mobile, lg on tablet
   const bottomPosition = hasBottomNav 
-    ? BOTTOM_NAV_HEIGHT + theme.spacing.lg  // Nav height + extra spacing above nav
-    : theme.spacing.lg;  // Just the base spacing
+    ? BOTTOM_NAV_HEIGHT + baseSpacing + extraTabletSpacing  // Nav height + extra spacing above nav
+    : baseSpacing + extraTabletSpacing;  // Just the base spacing
 
   return (
     <TouchableOpacity

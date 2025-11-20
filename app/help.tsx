@@ -1,12 +1,12 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Linking,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Layout from './components/Layout';
 import theme from './theme/colors';
@@ -100,94 +100,95 @@ export default function HelpScreen() {
             </Text>
           </View>
 
-          {/* About Teleprompter Tool */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>🎤 Teleprompter Tool</Text>
-            <Text style={styles.description}>
-              The Teleprompter is the first tool in the Bandaid toolbox. It helps musicians, 
-              bands, and performers display lyrics and scripts in a professional, easy-to-read format 
-              during live performances or content creation.
-            </Text>
-
-            
-             {/* Quick Tips */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Quick Tips</Text>
-            <View style={styles.tipsList}>
-              <View style={styles.tipItem}>
-                <Text style={styles.tipIcon}>💡</Text>
-                <Text style={styles.tipText}>
-                  Tap anywhere on the screen during playback to pause/resume
-                </Text>
-              </View>
-              <View style={styles.tipItem}>
-                <Text style={styles.tipIcon}>💡</Text>
-                <Text style={styles.tipText}>
-                  Use playlists to organize related texts for presentations or performances
-                </Text>
-              </View>
-              <View style={styles.tipItem}>
-                <Text style={styles.tipIcon}>💡</Text>
-                <Text style={styles.tipText}>
-                  Adjust speed and font size per text for optimal readability
-                </Text>
-              </View>
-              <View style={styles.tipItem}>
-                <Text style={styles.tipIcon}>💡</Text>
-                <Text style={styles.tipText}>
-                  Enable "Keep Screen On" in settings for uninterrupted playback
-                </Text>
-              </View>
-              <View style={styles.tipItem}>
-                <Text style={styles.tipIcon}>💡</Text>
-                <Text style={styles.tipText}>
-                  Press and hold to reorder texts in your lists or playlists
-                </Text>
-              </View>
+          {/* Teleprompter Tool Section */}
+          <View style={styles.teleprompterSection}>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>🎤 Teleprompter Tool</Text>
+              <Text style={styles.description}>
+                The Teleprompter is the first tool in the Bandaid toolbox. It helps musicians, 
+                bands, and performers display lyrics and scripts in a professional, easy-to-read format 
+                during live performances or content creation.
+              </Text>
             </View>
-          </View>
 
-          {/* FAQ */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
-            {FAQ_DATA.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.faqItem}
-                onPress={() => toggleFAQ(index)}
-                activeOpacity={0.8}
-              >
-                <View style={styles.faqHeader}>
-                  <Text style={styles.faqQuestion}>{item.question}</Text>
-                  <Text style={styles.faqIcon}>
-                    {expandedIndex === index ? '−' : '+'}
+            {/* Quick Tips */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Quick Tips</Text>
+              <View style={styles.tipsList}>
+                <View style={styles.tipItem}>
+                  <Text style={styles.tipIcon}>💡</Text>
+                  <Text style={styles.tipText}>
+                    Tap anywhere on the screen during playback to pause/resume
                   </Text>
                 </View>
-                {expandedIndex === index && (
-                  <Text style={styles.faqAnswer}>{item.answer}</Text>
-                )}
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {/* Keyboard Shortcuts */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Playback Controls</Text>
-            <View style={styles.controlsList}>
-              <View style={styles.controlItem}>
-                <Text style={styles.controlLabel}>Tap Screen</Text>
-                <Text style={styles.controlDescription}>Pause/Resume playback</Text>
-              </View>
-              <View style={styles.controlItem}>
-                <Text style={styles.controlLabel}>Speed Slider</Text>
-                <Text style={styles.controlDescription}>Adjust scrolling speed (0.5x - 5x)</Text>
-              </View>
-              <View style={styles.controlItem}>
-                <Text style={styles.controlLabel}>Font Slider</Text>
-                <Text style={styles.controlDescription}>Change text size (16 - 48)</Text>
+                <View style={styles.tipItem}>
+                  <Text style={styles.tipIcon}>💡</Text>
+                  <Text style={styles.tipText}>
+                    Use playlists to organize related texts for presentations or performances
+                  </Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Text style={styles.tipIcon}>💡</Text>
+                  <Text style={styles.tipText}>
+                    Adjust speed and font size per text for optimal readability
+                  </Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Text style={styles.tipIcon}>💡</Text>
+                  <Text style={styles.tipText}>
+                    Enable "Keep Screen On" in settings for uninterrupted playback
+                  </Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Text style={styles.tipIcon}>💡</Text>
+                  <Text style={styles.tipText}>
+                    Press and hold to reorder texts in your lists or playlists
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
+
+            {/* FAQ */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
+              {FAQ_DATA.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.faqItem}
+                  onPress={() => toggleFAQ(index)}
+                  activeOpacity={0.8}
+                >
+                  <View style={styles.faqHeader}>
+                    <Text style={styles.faqQuestion}>{item.question}</Text>
+                    <Text style={styles.faqIcon}>
+                      {expandedIndex === index ? '−' : '+'}
+                    </Text>
+                  </View>
+                  {expandedIndex === index && (
+                    <Text style={styles.faqAnswer}>{item.answer}</Text>
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* Playback Controls */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Playback Controls</Text>
+              <View style={styles.controlsList}>
+                <View style={styles.controlItem}>
+                  <Text style={styles.controlLabel}>Tap Screen</Text>
+                  <Text style={styles.controlDescription}>Pause/Resume playback</Text>
+                </View>
+                <View style={styles.controlItem}>
+                  <Text style={styles.controlLabel}>Speed Slider</Text>
+                  <Text style={styles.controlDescription}>Adjust scrolling speed (0.5x - 5x)</Text>
+                </View>
+                <View style={styles.controlItem}>
+                  <Text style={styles.controlLabel}>Font Slider</Text>
+                  <Text style={styles.controlDescription}>Change text size (16 - 48)</Text>
+                </View>
+              </View>
+            </View>
           </View>
 
          
@@ -229,10 +230,10 @@ const styles = StyleSheet.create({
   },
   backText: {
     color: theme.colors.accent,
-    fontSize: 16,
+    fontSize: theme.typography.bodyMedium,
   },
   title: {
-    fontSize: 20,
+    fontSize: theme.typography.heading3,
     fontWeight: 'bold',
     color: theme.colors.text,
   },
@@ -247,10 +248,18 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   section: {
+    marginTop: theme.spacing.md,
+  },
+  teleprompterSection: {
+    backgroundColor: theme.colors.backgroundLight,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary + '40',
+    padding: theme.spacing.lg,
     marginTop: theme.spacing.xl,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: theme.typography.heading4,
     fontWeight: 'bold',
     color: theme.colors.primary,
     marginBottom: theme.spacing.md,
@@ -258,9 +267,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   description: {
-    fontSize: 16,
+    fontSize: theme.typography.bodyMedium,
     color: theme.colors.text,
-    lineHeight: 24,
+    lineHeight: theme.typography.bodyMedium * 1.5,
   },
   tipsList: {
     gap: theme.spacing.md,
@@ -273,14 +282,14 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   tipIcon: {
-    fontSize: 20,
+    fontSize: theme.typography.heading3,
     marginRight: theme.spacing.sm,
   },
   tipText: {
     flex: 1,
-    fontSize: 15,
+    fontSize: theme.typography.label,
     color: theme.colors.text,
-    lineHeight: 22,
+    lineHeight: theme.typography.label * 1.47,
   },
   faqItem: {
     backgroundColor: theme.colors.backgroundLight,
@@ -296,20 +305,20 @@ const styles = StyleSheet.create({
   },
   faqQuestion: {
     flex: 1,
-    fontSize: 16,
+    fontSize: theme.typography.bodyMedium,
     fontWeight: '600',
     color: theme.colors.text,
     marginRight: theme.spacing.sm,
   },
   faqIcon: {
-    fontSize: 24,
+    fontSize: theme.typography.heading2,
     color: theme.colors.primary,
     fontWeight: 'bold',
   },
   faqAnswer: {
-    fontSize: 15,
+    fontSize: theme.typography.label,
     color: theme.colors.textMuted,
-    lineHeight: 22,
+    lineHeight: theme.typography.label * 1.47,
     paddingHorizontal: theme.spacing.md,
     paddingBottom: theme.spacing.md,
   },
@@ -322,13 +331,13 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.md,
   },
   controlLabel: {
-    fontSize: 16,
+    fontSize: theme.typography.bodyMedium,
     fontWeight: '600',
     color: theme.colors.text,
     marginBottom: 4,
   },
   controlDescription: {
-    fontSize: 14,
+    fontSize: theme.typography.bodySmall,
     color: theme.colors.textMuted,
   },
   supportButton: {
@@ -341,7 +350,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.primary,
   },
   supportButtonText: {
-    fontSize: 16,
+    fontSize: theme.typography.button,
     fontWeight: '600',
     color: theme.colors.primary,
   },

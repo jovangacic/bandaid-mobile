@@ -13,12 +13,14 @@ interface PageHeaderProps {
 export default function PageHeader({ title, count, onMenuPress }: PageHeaderProps) {
   return (
     <View style={styles.header}>
-      <TouchableOpacity
-        style={styles.menuButton}
-        onPress={onMenuPress}
-      >
-        <Text style={styles.menuIcon}>☰</Text>
-      </TouchableOpacity>
+      <View style={styles.leftSection}>
+        <TouchableOpacity
+          style={styles.menuButton}
+          onPress={onMenuPress}
+        >
+          <Text style={styles.menuIcon}>☰</Text>
+        </TouchableOpacity>
+      </View>
 
       <MaskedView
         style={styles.titleContainer}
@@ -36,8 +38,12 @@ export default function PageHeader({ title, count, onMenuPress }: PageHeaderProp
         </LinearGradient>
       </MaskedView>
 
-      <View style={[styles.countContainer, count === undefined && styles.transparentText]}>
-        <Text style={styles.countText}>{count}</Text>
+      <View style={styles.rightSection}>
+        {count !== undefined && (
+          <View style={styles.countContainer}>
+            <Text style={styles.countText}>{count}</Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -51,6 +57,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.lg,
     paddingTop: theme.spacing.xl,
     paddingBottom: theme.spacing.md,
+  },
+  leftSection: {
+    width: 60,
+    alignItems: 'flex-start',
+  },
+  rightSection: {
+    width: 60,
+    alignItems: 'flex-end',
   },
   menuButton: {
     padding: theme.spacing.sm,

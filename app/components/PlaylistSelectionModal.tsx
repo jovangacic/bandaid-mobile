@@ -1,13 +1,13 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
 import {
-    Dimensions,
-    Modal,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { usePlaylists } from '../context/PlaylistContext';
 import theme from '../theme/colors';
@@ -62,8 +62,16 @@ export default function PlaylistSelectionModal({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
+      <TouchableOpacity 
+        style={styles.overlay}
+        activeOpacity={1}
+        onPress={onClose}
+      >
+        <TouchableOpacity 
+          activeOpacity={1} 
+          onPress={(e) => e.stopPropagation()}
+        >
+          <View style={styles.modalContainer}>
           <View style={styles.header}>
             <Text style={styles.title}>Select Playlists</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
@@ -129,7 +137,8 @@ export default function PlaylistSelectionModal({
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+        </TouchableOpacity>
+      </TouchableOpacity>
     </Modal>
   );
 }
@@ -144,8 +153,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     borderTopLeftRadius: theme.borderRadius.lg,
     borderTopRightRadius: theme.borderRadius.lg,
-    maxHeight: SCREEN_HEIGHT * 0.8,
-    minHeight: SCREEN_HEIGHT * 0.5,
+    maxHeight: SCREEN_HEIGHT * 0.96,
+    minHeight: Math.min(SCREEN_HEIGHT * 0.75, 550),
   },
   header: {
     flexDirection: 'row',
@@ -245,6 +254,7 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     padding: theme.spacing.lg,
+    paddingBottom: 48,
     gap: theme.spacing.md,
     borderTopWidth: 1,
     borderTopColor: theme.colors.backgroundLight,

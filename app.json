@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "bandaid-mobile",
-    "slug": "bandaid-mobile",
+    "name": "bandaid",
+    "slug": "bandaid",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "bandaidmobile",
     "userInterfaceStyle": "automatic",
@@ -12,6 +12,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.thorn.bandaid",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -43,6 +45,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "eef0db21-dd18-4af4-a559-19a7f1072a3f"
+      }
     }
   }
 }

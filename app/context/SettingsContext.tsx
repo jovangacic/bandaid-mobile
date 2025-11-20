@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
+export type OrientationMode = 'auto' | 'portrait' | 'landscape';
+
 export interface Settings {
   keepScreenOn: boolean;
   defaultSpeed: number;
@@ -8,6 +10,7 @@ export interface Settings {
   mirrorMode: boolean;
   showWordCount: boolean;
   confirmDelete: boolean;
+  orientationMode: OrientationMode;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -17,6 +20,7 @@ export const DEFAULT_SETTINGS: Settings = {
   mirrorMode: false,
   showWordCount: true,
   confirmDelete: true,
+  orientationMode: 'auto',
 };
 
 const SETTINGS_KEY = '@bandaid_settings';

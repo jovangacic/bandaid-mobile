@@ -1,3 +1,13 @@
+import { Dimensions } from 'react-native';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
+// Determine if device is a tablet (width >= 768px is common tablet breakpoint)
+const isTablet = SCREEN_WIDTH >= 768;
+
+// Typography scale multiplier for tablets
+const scale = isTablet ? 1.3 : 1;
+
 // Theme colors based on Tailwind CSS
 export const colors = {
   // Primary palette - purple gradient
@@ -20,6 +30,38 @@ export const colors = {
   gray: {
     600: '#666666',
   },
+};
+
+// Responsive typography scale
+export const typography = {
+  // Display text (large titles, headers)
+  displayLarge: Math.round(40 * scale),
+  displayMedium: Math.round(36 * scale),
+  displaySmall: Math.round(32 * scale),
+  
+  // Headings
+  heading1: Math.round(28 * scale),
+  heading2: Math.round(24 * scale),
+  heading3: Math.round(20 * scale),
+  heading4: Math.round(18 * scale),
+  
+  // Body text
+  bodyLarge: Math.round(18 * scale),
+  bodyMedium: Math.round(16 * scale),
+  bodySmall: Math.round(14 * scale),
+  
+  // UI elements
+  label: Math.round(15 * scale),
+  caption: Math.round(12 * scale),
+  overline: Math.round(11 * scale),
+  
+  // Button text
+  button: Math.round(16 * scale),
+  
+  // Tool cards
+  toolName: Math.round(20 * scale),
+  toolIcon: Math.round(48 * scale),
+  toolDescription: Math.round(15 * scale),
 };
 
 // Theme configuration
@@ -49,6 +91,8 @@ export const theme = {
     md: 10,
     lg: 16,
   },
+  typography,
+  isTablet,
 };
 
 export default theme;

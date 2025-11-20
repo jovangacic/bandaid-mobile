@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -85,8 +86,13 @@ export default function ToolsHome() {
 
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           <View style={styles.welcomeSection}>
+            <Image
+              source={require('../assets/images/bandaid-sign-04.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
             <GradientText text='bandaid' colors={[colors.purple[700], colors.orange[400]]}
-              style={{ fontSize: 40 }}></GradientText>
+              style={{ fontSize: theme.typography.displayLarge }}></GradientText>
             <Text style={styles.welcomeText}>
               The toolbox for musicians. Select a tool below to get started.
             </Text>
@@ -138,12 +144,19 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: theme.spacing.md,
+    paddingTop: theme.spacing.sm,
     paddingBottom: 40,
   },
   welcomeSection: {
-    marginBottom: theme.spacing.xl,
+    marginBottom: theme.spacing.md,
     padding: theme.spacing.lg,
+    paddingTop: theme.spacing.sm,
     alignItems: 'center',
+  },
+  logo: {
+    width: theme.isTablet ? 75 : 50,
+    height: theme.isTablet ? 75 : 50,
+    marginBottom: theme.spacing.sm,
   },
   welcomeTitle: {
     fontSize: 24,
@@ -152,10 +165,10 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.sm,
   },
   welcomeText: {
-    fontSize: 16,
+    fontSize: theme.typography.bodyMedium,
     marginTop: theme.spacing.md,
     color: theme.colors.textMuted,
-    lineHeight: 24,
+    lineHeight: theme.typography.bodyMedium * 1.5,
     textAlign: 'center',
   },
   toolsGrid: {
@@ -179,7 +192,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.sm,
   },
   toolIcon: {
-    fontSize: 48,
+    fontSize: theme.typography.toolIcon,
   },
   comingSoonBadge: {
     backgroundColor: theme.colors.accent + '30',
@@ -188,12 +201,12 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.sm,
   },
   comingSoonText: {
-    fontSize: 12,
+    fontSize: theme.typography.caption,
     fontWeight: 'bold',
     color: theme.colors.accent,
   },
   toolName: {
-    fontSize: 20,
+    fontSize: theme.typography.toolName,
     fontWeight: 'bold',
     color: theme.colors.text,
     marginBottom: theme.spacing.xs,
@@ -202,9 +215,9 @@ const styles = StyleSheet.create({
     color: theme.colors.textMuted,
   },
   toolDescription: {
-    fontSize: 15,
+    fontSize: theme.typography.toolDescription,
     color: theme.colors.textMuted,
-    lineHeight: 22,
+    lineHeight: theme.typography.toolDescription * 1.47,
   },
   toolDescriptionDisabled: {
     color: theme.colors.textMuted,
