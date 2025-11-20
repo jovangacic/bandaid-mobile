@@ -1,24 +1,28 @@
+import Slider from '@react-native-community/slider';
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-    Dimensions,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Dimensions,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { runOnJS } from 'react-native-reanimated';
 import { useSettings } from '../context/SettingsContext';
 import { useTexts } from '../context/TextContext';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
+const isTablet = SCREEN_WIDTH >= 768;
 
 export default function TextView() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { texts } = useTexts();
+  const { texts, updateText } = useTexts();
   const { settings } = useSettings();
   
   const scrollViewRef = useRef<ScrollView>(null);
@@ -31,12 +35,23 @@ export default function TextView() {
   const touchStartXRef = useRef(0);
   const hasDraggedRef = useRef(false);
   const wasScrollingBeforeDragRef = useRef(false); // Track if autoscrolling was active before manual scroll
+  const baseFontSizeRef = useRef(24);
+  const [tempFontSize, setTempFontSize] = useState<number | null>(null);
+  const [tempSpeed, setTempSpeed] = useState<number | null>(null);
+  const speedUpdateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Find the text by id and current index
   const currentIndex = texts.findIndex(t => t.id === id);
   const text = texts[currentIndex];
   const hasPrevious = currentIndex > 0;
   const hasNext = currentIndex < texts.length - 1;
+
+  // Update base font size ref when text changes
+  useEffect(() => {
+    if (text) {
+      baseFontSizeRef.current = text.fontSize || 24;
+    }
+  }, [text?.id]);
   
   // Check if content overflows
   const isScrollable = contentHeight > scrollViewHeight;
@@ -187,6 +202,80 @@ export default function TextView() {
     }
   };
 
+  const handleSpeedChange = (newSpeed: number) => {
+    if (!text) return;
+    
+    // Update temp speed for immediate visual feedback
+    setTempSpeed(newSpeed);
+    
+    // Clear any existing timeout
+    if (speedUpdateTimeoutRef.current) {
+      clearTimeout(speedUpdateTimeoutRef.current);
+    }
+    
+    // Debounce the actual save
+    speedUpdateTimeoutRef.current = setTimeout(async () => {
+      const wasAutoScrolling = isScrolling;
+      // Pause scrolling during speed change
+      if (wasAutoScrolling) {
+        setIsScrolling(false);
+      }
+      
+      // Update the text with new speed
+      await updateText(text.id, { ...text, scrollSpeed: newSpeed });
+      setTempSpeed(null);
+      
+      // Resume scrolling if it was active
+      if (wasAutoScrolling) {
+        setIsScrolling(true);
+      }
+    }, 500);
+  };
+
+  const updateTempFontSize = (size: number) => {
+    setTempFontSize(size);
+  };
+
+  const saveFontSize = async (newSize: number) => {
+    if (!text || newSize === text.fontSize) return;
+    try {
+      await updateText(text.id, { ...text, fontSize: newSize });
+      baseFontSizeRef.current = newSize;
+    } catch (error) {
+      console.error('Error updating font size:', error);
+    }
+  };
+
+  const clearTempFontSize = () => {
+    setTempFontSize(null);
+  };
+
+  const pinchGesture = Gesture.Pinch()
+    .onBegin(() => {
+      if (text) {
+        baseFontSizeRef.current = text.fontSize || 24;
+      }
+    })
+    .onUpdate((event) => {
+      if (!text) return;
+      
+      const scale = event.scale;
+      const newFontSize = Math.round(baseFontSizeRef.current * scale);
+      
+      // Clamp font size between 16 and 48
+      const clampedFontSize = Math.max(16, Math.min(48, newFontSize));
+      
+      // Update temp state for immediate visual feedback
+      runOnJS(updateTempFontSize)(clampedFontSize);
+    })
+    .onEnd(() => {
+      const finalSize = tempFontSize;
+      if (finalSize !== null) {
+        runOnJS(saveFontSize)(finalSize);
+      }
+      runOnJS(clearTempFontSize)();
+    });
+
   if (!text) {
     return (
       <View style={styles.errorContainer}>
@@ -234,31 +323,63 @@ export default function TextView() {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.scrollView}
-          contentContainerStyle={styles.contentContainer}
-          showsVerticalScrollIndicator={false}
-          scrollEnabled={isScrollable} // Only allow scrolling if content overflows
-          onContentSizeChange={(width, height) => setContentHeight(height)}
-          onLayout={(event) => setScrollViewHeight(event.nativeEvent.layout.height)}
-          onScrollBeginDrag={handleScrollBeginDrag}
-          onScrollEndDrag={handleScrollEndDrag}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-        >
-          <Text style={[styles.contentText, { fontSize: text.fontSize || 24, lineHeight: (text.fontSize || 24) * 1.5 }]}>
-            {text.content}
-          </Text>
-          
-          {/* Extra space at bottom so text can scroll completely off screen */}
-          {isScrollable && <View style={styles.bottomSpacer} />}
-        </ScrollView>
+        <GestureDetector gesture={pinchGesture}>
+          <ScrollView
+            ref={scrollViewRef}
+            style={styles.scrollView}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+            scrollEnabled={isScrollable} // Only allow scrolling if content overflows
+            onContentSizeChange={(width, height) => setContentHeight(height)}
+            onLayout={(event) => setScrollViewHeight(event.nativeEvent.layout.height)}
+            onScrollBeginDrag={handleScrollBeginDrag}
+            onScrollEndDrag={handleScrollEndDrag}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+          >
+            <Text style={[styles.contentText, { 
+              fontSize: tempFontSize || text.fontSize || 24, 
+              lineHeight: (tempFontSize || text.fontSize || 24) * 1.5 
+            }]}>
+              {text.content}
+            </Text>
+            
+            {/* Extra space at bottom so text can scroll completely off screen */}
+            {isScrollable && <View style={styles.bottomSpacer} />}
+          </ScrollView>
+        </GestureDetector>
       </View>
 
-      {/* Speed indicator */}
-      <View style={styles.speedIndicator}>
-        <Text style={styles.speedText}>Speed: {text.scrollSpeed}</Text>
+      {/* Speed controls */}
+      <View
+        style={[
+          styles.speedContainer,
+          { opacity: 0.8 }
+        ]}
+      >
+        <View style={styles.sliderTrack}>
+          <View 
+            style={[
+              styles.sliderFill, 
+              { width: `${(((tempSpeed || text.scrollSpeed) - 1) / 19) * 100}%` }
+            ]} 
+          />
+          <View style={styles.sliderLabels}>
+            <Text style={styles.speedLabel}>Speed</Text>
+            <Text style={styles.speedValue}>{tempSpeed || text.scrollSpeed}</Text>
+          </View>
+          <Slider
+            style={styles.slider}
+            minimumValue={1}
+            maximumValue={20}
+            step={1}
+            value={tempSpeed || text.scrollSpeed}
+            onValueChange={handleSpeedChange}
+            minimumTrackTintColor="transparent"
+            maximumTrackTintColor="transparent"
+            thumbTintColor="transparent"
+          />
+        </View>
       </View>
     </View>
   );
@@ -340,21 +461,67 @@ const styles = StyleSheet.create({
   bottomSpacer: {
     height: SCREEN_HEIGHT,
   },
-  speedIndicator: {
+  speedContainer: {
     position: 'absolute',
-    bottom: 60,
+    bottom: 80,
     right: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    width: isTablet ? SCREEN_WIDTH * 0.3 : SCREEN_WIDTH * 0.5,
   },
-  speedText: {
-    color: '#ffffff',
+  sliderTrack: {
+    position: 'relative',
+    width: '100%',
+    height: 36,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderRadius: 18,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  sliderFill: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor: '#8b5cf6',
+    borderRadius: 18,
+  },
+  sliderLabels: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    zIndex: 1,
+  },
+  speedLabel: {
     fontSize: 12,
+    color: '#ffffff',
     fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  speedValue: {
+    fontSize: 15,
+    color: '#ffffff',
+    fontWeight: '700',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  slider: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: '100%',
+    height: 36,
+    zIndex: 2,
   },
   errorContainer: {
     flex: 1,

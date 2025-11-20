@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PlaylistProvider } from "./context/PlaylistContext";
 import { SettingsProvider, useSettings } from "./context/SettingsContext";
 import { TextProvider } from "./context/TextContext";
@@ -79,12 +80,14 @@ function AppNavigator() {
 
 export default function RootLayout() {
   return (
-    <SettingsProvider>
-      <TextProvider>
-        <PlaylistProvider>
-          <AppNavigator />
-        </PlaylistProvider>
-      </TextProvider>
-    </SettingsProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SettingsProvider>
+        <TextProvider>
+          <PlaylistProvider>
+            <AppNavigator />
+          </PlaylistProvider>
+        </TextProvider>
+      </SettingsProvider>
+    </GestureHandlerRootView>
   );
 }
