@@ -1,13 +1,13 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
-  Image,
-  Linking,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    Image,
+    Linking,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import GradientText from './components/GradientText';
 import Layout from './components/Layout';
@@ -87,6 +87,43 @@ export default function AboutScreen() {
                 for downbeats.
               </Text>
             </View> */}
+          </View>
+
+          {/* FAQ */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>FAQ & Tips</Text>
+            
+            <View style={styles.faqCard}>
+              <Text style={styles.faqQuestion}>How do I adjust text size during performance?</Text>
+              <Text style={styles.faqAnswer}>
+                Use pinch gestures (pinch in/out) while viewing text in fullscreen mode to quickly 
+                adjust font size between 16-48px without leaving the performance view.
+              </Text>
+            </View>
+
+            <View style={styles.faqCard}>
+              <Text style={styles.faqQuestion}>Can I control scroll speed on the fly?</Text>
+              <Text style={styles.faqAnswer}>
+                Yes! In fullscreen mode, you'll see a speed slider on the right side. Slide it up/down 
+                to adjust scroll speed from 1-20 in real-time without interrupting your performance.
+              </Text>
+            </View>
+
+            <View style={styles.faqCard}>
+              <Text style={styles.faqQuestion}>How do I change screen orientation?</Text>
+              <Text style={styles.faqAnswer}>
+                Go to Settings and choose your preferred orientation: Auto-Rotate (follows device), 
+                Portrait Only, or Landscape Only. This setting applies across the entire app.
+              </Text>
+            </View>
+
+            <View style={styles.faqCard}>
+              <Text style={styles.faqQuestion}>What is Mirror Mode?</Text>
+              <Text style={styles.faqAnswer}>
+                Enable Mirror Mode in Settings to flip text horizontally. Perfect when placing your 
+                device behind glass or mirrors for a professional teleprompter setup.
+              </Text>
+            </View>
           </View>
 
           {/* Coming Soon */}
@@ -270,6 +307,23 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.label,
     color: theme.colors.textMuted,
     lineHeight: theme.typography.label * 1.6,
+  },
+  faqCard: {
+    backgroundColor: theme.colors.backgroundLight,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    marginBottom: theme.spacing.md,
+  },
+  faqQuestion: {
+    fontSize: theme.typography.bodyMedium,
+    fontWeight: '600',
+    color: theme.colors.text,
+    marginBottom: theme.spacing.xs,
+  },
+  faqAnswer: {
+    fontSize: theme.typography.bodySmall,
+    color: theme.colors.textMuted,
+    lineHeight: theme.typography.bodySmall * 1.5,
   },
   linkButton: {
     flexDirection: 'row',
