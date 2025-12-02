@@ -27,21 +27,12 @@ const TextList = ({ texts, onTextPress, onReorder, onEdit }: TextListProps) => {
   
   // Memoize playlist lookup to avoid recalculating on every render
   const textPlaylistsMap = useMemo(() => {
-    const map = new Map<string, typeof playlists>();
+    const map = new Map<string, Array<typeof playlists[number]>>();
     texts.forEach(text => {
       map.set(text.id, playlists.filter(p => p.textIds.includes(text.id)));
     });
     return map;
   }, [texts, playlists]);
-
-  if (texts.length === 0) {
-    return (
-      <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>No texts yet</Text>
-        <Text style={styles.emptySubtext}>Tap + to create your first text</Text>
-      </View>
-    );
-  }
 
   const renderItem = useCallback(({ item, drag, isActive }: RenderItemParams<TextType>) => {
     const itemPlaylists = textPlaylistsMap.get(item.id) || [];
@@ -124,6 +115,15 @@ const TextList = ({ texts, onTextPress, onReorder, onEdit }: TextListProps) => {
   }, [onReorder]);
 
   const keyExtractor = useCallback((item: TextType) => item.id, []);
+
+  if (texts.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No texts yet</Text>
+        <Text style={styles.emptySubtext}>Tap + to create your first text</Text>
+      </View>
+    );
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

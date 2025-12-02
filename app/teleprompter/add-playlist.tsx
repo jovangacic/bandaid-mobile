@@ -2,7 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-  Alert,
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -10,13 +10,15 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
+import FormHeader from '../components/FormHeader';
 import Layout from '../components/Layout';
 import TextSelectionModal from '../components/TextSelectionModal';
 import { usePlaylists } from '../context/PlaylistContext';
 import { createPlaylist } from '../models/Playlist';
 import theme from '../theme/colors';
+import { showErrorToast, showSuccessToast } from '../utils/toast';
 
 export default function AddPlaylistScreen() {
   const router = useRouter();
@@ -28,6 +30,7 @@ export default function AddPlaylistScreen() {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [saving, setSaving] = useState(false);
   const [selectedTextIds, setSelectedTextIds] = useState<string[]>([]);
   const [textModalVisible, setTextModalVisible] = useState(false);
 
@@ -41,10 +44,13 @@ export default function AddPlaylistScreen() {
 
   const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert('Error', 'Please enter a playlist name');
+      showErrorToast('Please enter a playlist name', 'Validation Error');
       return;
     }
 
+    if (saving) return; // Prevent double-tap
+
+    setSaving(true);
     try {
       const playlistData = isEditing && playlistToEdit ? {
         name: name.trim(),
@@ -63,9 +69,11 @@ export default function AddPlaylistScreen() {
         currentTextIds
       );
 
+      showSuccessToast(`Playlist ${isEditing ? 'updated' : 'created'} successfully`);
       router.back();
     } catch (error) {
-      Alert.alert('Error', 'Failed to save playlist');
+      showErrorToast('Failed to save playlist');
+      setSaving(false);
     }
   };
 
@@ -80,17 +88,12 @@ export default function AddPlaylistScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()} style={styles.cancelButton}>
-              <Text style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity>
-            <Text style={styles.title}>
-              {isEditing ? 'Edit Playlist' : 'New Playlist'}
-            </Text>
-            <View style={styles.placeholder} />
-          </View>
+        <FormHeader
+          title={isEditing ? 'Edit Playlist' : 'New Playlist'}
+          onCancel={() => router.back()}
+        />
 
+        <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.form}>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Playlist Name*</Text>
@@ -139,13 +142,13 @@ export default function AddPlaylistScreen() {
 
           <View style={styles.footer}>
           <TouchableOpacity
-            style={[styles.saveButton, !name.trim() && styles.saveButtonDisabled]}
+            style={[styles.saveButton, (!name.trim() || saving) && styles.saveButtonDisabled]}
             onPress={handleSave}
-            disabled={!name.trim()}
+            disabled={!name.trim() || saving}
           >
             <LinearGradient
               colors={
-                name.trim()
+                name.trim() && !saving
                   ? [theme.colors.primaryDark, theme.colors.primary, theme.colors.accent]
                   : [theme.colors.textMuted, theme.colors.textMuted]
               }
@@ -153,9 +156,15 @@ export default function AddPlaylistScreen() {
               end={{ x: 1, y: 0 }}
               style={styles.saveButtonGradient}
             >
-              <Text style={styles.saveButtonText}>
+              {saving ? (
+                <View style={styles.savingContainer}>
+                  <ActivityIndicator color="#fff" size="small" />
+                  <Text style={[styles.saveButtonText, { marginLeft: 8 }]}>Saving...</Text>
+                </View>
+              ) : (
+                <Text style={styles.saveButtonText}>
                 {isEditing ? 'Update' : 'Create'}
-              </Text>
+              </Text>)}
             </LinearGradient>
           </TouchableOpacity>
           </View>
@@ -189,27 +198,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     padding: theme.spacing.md,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: theme.spacing.lg,
-  },
-  cancelButton: {
-    padding: theme.spacing.xs,
-  },
-  cancelText: {
-    color: theme.colors.accent,
-    fontSize: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: theme.colors.text,
-  },
-  placeholder: {
-    width: 60,
   },
   form: {
     // Padding is now in scrollContent
@@ -297,6 +285,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: theme.colors.background,
+  },
+  savingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   deleteButton: {
     padding: theme.spacing.md,

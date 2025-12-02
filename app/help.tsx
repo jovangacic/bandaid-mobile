@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -103,7 +104,10 @@ export default function HelpScreen() {
           {/* Teleprompter Tool Section */}
           <View style={styles.teleprompterSection}>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>🎤 Teleprompter Tool</Text>
+              <View style={styles.sectionTitleContainer}>
+                <Ionicons name="mic-outline" size={24} color={theme.colors.primary} />
+                <Text style={[styles.sectionTitle, styles.sectionTitleWithIcon]}>Teleprompter Tool</Text>
+              </View>
               <Text style={styles.description}>
                 The Teleprompter is the first tool in the Bandaid toolbox. It helps musicians, 
                 bands, and performers display lyrics and scripts in a professional, easy-to-read format 
@@ -116,31 +120,31 @@ export default function HelpScreen() {
               <Text style={styles.sectionTitle}>Quick Tips</Text>
               <View style={styles.tipsList}>
                 <View style={styles.tipItem}>
-                  <Text style={styles.tipIcon}>💡</Text>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
                   <Text style={styles.tipText}>
                     Tap anywhere on the screen during playback to pause/resume
                   </Text>
                 </View>
                 <View style={styles.tipItem}>
-                  <Text style={styles.tipIcon}>💡</Text>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
                   <Text style={styles.tipText}>
                     Use playlists to organize related texts for presentations or performances
                   </Text>
                 </View>
                 <View style={styles.tipItem}>
-                  <Text style={styles.tipIcon}>💡</Text>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
                   <Text style={styles.tipText}>
                     Adjust speed and font size per text for optimal readability
                   </Text>
                 </View>
                 <View style={styles.tipItem}>
-                  <Text style={styles.tipIcon}>💡</Text>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
                   <Text style={styles.tipText}>
                     Enable "Keep Screen On" in settings for uninterrupted playback
                   </Text>
                 </View>
                 <View style={styles.tipItem}>
-                  <Text style={styles.tipIcon}>💡</Text>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
                   <Text style={styles.tipText}>
                     Press and hold to reorder texts in your lists or playlists
                   </Text>
@@ -191,7 +195,223 @@ export default function HelpScreen() {
             </View>
           </View>
 
-         
+          {/* Gig Calendar Section */}
+          <View style={styles.gigCalendarSection}>
+            <View style={styles.section}>
+              <View style={styles.sectionTitleContainer}>
+                <Ionicons name="calendar-outline" size={24} color={theme.colors.primary} />
+                <Text style={[styles.sectionTitle, styles.sectionTitleWithIcon]}>Gig Calendar</Text>
+              </View>
+              <Text style={styles.description}>
+                Keep track of all your upcoming performances, rehearsals, and music events. 
+                Set reminders and never miss a gig again!
+              </Text>
+            </View>
+
+            {/* Gig Calendar Tips */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Quick Tips</Text>
+              <View style={styles.tipsList}>
+                <View style={styles.tipItem}>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
+                  <Text style={styles.tipText}>
+                    Set multiple reminders for each gig (7 days, 1 day, and custom hours before)
+                  </Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
+                  <Text style={styles.tipText}>
+                    Enable recurring gigs for regular performances or rehearsals
+                  </Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
+                  <Text style={styles.tipText}>
+                    Tap on a notification to jump directly to the gig details
+                  </Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
+                  <Text style={styles.tipText}>
+                    Long press a gig to quickly delete it from your calendar
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Gig Calendar FAQ */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
+              <TouchableOpacity
+                style={styles.faqItem}
+                onPress={() => toggleFAQ(100)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.faqHeader}>
+                  <Text style={styles.faqQuestion}>How do I create a new gig?</Text>
+                  <Text style={styles.faqIcon}>{expandedIndex === 100 ? '−' : '+'}</Text>
+                </View>
+                {expandedIndex === 100 && (
+                  <Text style={styles.faqAnswer}>
+                    Tap the "+" button in the bottom right corner. Enter the gig title, date, time, 
+                    and optional description. Configure your reminder settings, then tap "Save Gig".
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.faqItem}
+                onPress={() => toggleFAQ(101)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.faqHeader}>
+                  <Text style={styles.faqQuestion}>Can I set recurring gigs?</Text>
+                  <Text style={styles.faqIcon}>{expandedIndex === 101 ? '−' : '+'}</Text>
+                </View>
+                {expandedIndex === 101 && (
+                  <Text style={styles.faqAnswer}>
+                    Yes! When creating or editing a gig, enable the "Recurring" option and set the interval 
+                    in days. The app will automatically create the next occurrence after each gig passes.
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.faqItem}
+                onPress={() => toggleFAQ(102)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.faqHeader}>
+                  <Text style={styles.faqQuestion}>How do reminders work?</Text>
+                  <Text style={styles.faqIcon}>{expandedIndex === 102 ? '−' : '+'}</Text>
+                </View>
+                {expandedIndex === 102 && (
+                  <Text style={styles.faqAnswer}>
+                    You can set reminders for 7 days before, 1 day before, and custom hours before (1-12 hours). 
+                    Enable "Reminders" and select which notifications you want. Make sure to grant notification 
+                    permissions when prompted.
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Record Track Section */}
+          <View style={styles.recordTrackSection}>
+            <View style={styles.section}>
+              <View style={styles.sectionTitleContainer}>
+                <Ionicons name="radio-outline" size={24} color={theme.colors.primary} />
+                <Text style={[styles.sectionTitle, styles.sectionTitleWithIcon]}>Record Track</Text>
+              </View>
+              <Text style={styles.description}>
+                Record high-quality audio for song ideas, rehearsals, or voice memos. 
+                Play back your recordings with loop functionality for practice and analysis.
+              </Text>
+            </View>
+
+            {/* Record Track Tips */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Quick Tips</Text>
+              <View style={styles.tipsList}>
+                <View style={styles.tipItem}>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
+                  <Text style={styles.tipText}>
+                    Use the loop feature to practice difficult sections by setting start and end markers
+                  </Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
+                  <Text style={styles.tipText}>
+                    Share recordings with bandmates via WhatsApp, Viber, or any messaging app
+                  </Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
+                  <Text style={styles.tipText}>
+                    Long press a recording to delete it quickly from your list
+                  </Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
+                  <Text style={styles.tipText}>
+                    Give your recordings descriptive titles to stay organized
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Record Track FAQ */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
+              <TouchableOpacity
+                style={styles.faqItem}
+                onPress={() => toggleFAQ(200)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.faqHeader}>
+                  <Text style={styles.faqQuestion}>How do I record audio?</Text>
+                  <Text style={styles.faqIcon}>{expandedIndex === 200 ? '−' : '+'}</Text>
+                </View>
+                {expandedIndex === 200 && (
+                  <Text style={styles.faqAnswer}>
+                    Tap the "+" button to open the recorder. Press the red record button to start recording. 
+                    Press stop when finished, give your recording a title, and tap "Save".
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.faqItem}
+                onPress={() => toggleFAQ(201)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.faqHeader}>
+                  <Text style={styles.faqQuestion}>How does the loop feature work?</Text>
+                  <Text style={styles.faqIcon}>{expandedIndex === 201 ? '−' : '+'}</Text>
+                </View>
+                {expandedIndex === 201 && (
+                  <Text style={styles.faqAnswer}>
+                    During playback, tap the loop button. Drag the markers on the timeline to select the section 
+                    you want to loop. The selected portion will repeat continuously until you disable looping.
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.faqItem}
+                onPress={() => toggleFAQ(202)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.faqHeader}>
+                  <Text style={styles.faqQuestion}>Can I edit the recording title after saving?</Text>
+                  <Text style={styles.faqIcon}>{expandedIndex === 202 ? '−' : '+'}</Text>
+                </View>
+                {expandedIndex === 202 && (
+                  <Text style={styles.faqAnswer}>
+                    Yes! Open the recording player and tap the edit icon next to the title. 
+                    Enter a new title and tap "Save" to update it.
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.faqItem}
+                onPress={() => toggleFAQ(203)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.faqHeader}>
+                  <Text style={styles.faqQuestion}>What audio format are recordings saved in?</Text>
+                  <Text style={styles.faqIcon}>{expandedIndex === 203 ? '−' : '+'}</Text>
+                </View>
+                {expandedIndex === 203 && (
+                  <Text style={styles.faqAnswer}>
+                    Recordings are saved in M4A format, which provides high audio quality while 
+                    maintaining reasonable file sizes. This format is widely compatible with most devices and apps.
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
 
           {/* Support */}
           <View style={styles.section}>
@@ -258,6 +478,31 @@ const styles = StyleSheet.create({
     padding: theme.spacing.lg,
     marginTop: theme.spacing.xl,
   },
+  gigCalendarSection: {
+    backgroundColor: theme.colors.backgroundLight,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary + '40',
+    padding: theme.spacing.lg,
+    marginTop: theme.spacing.xl,
+  },
+  recordTrackSection: {
+    backgroundColor: theme.colors.backgroundLight,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary + '40',
+    padding: theme.spacing.lg,
+    marginTop: theme.spacing.xl,
+  },
+  sectionTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    marginBottom: theme.spacing.md,
+  },
+  sectionTitleWithIcon: {
+    marginBottom: 0,
+  },
   sectionTitle: {
     fontSize: theme.typography.heading4,
     fontWeight: 'bold',
@@ -284,6 +529,10 @@ const styles = StyleSheet.create({
   tipIcon: {
     fontSize: theme.typography.heading3,
     marginRight: theme.spacing.sm,
+  },
+  tipIconStyle: {
+    marginRight: theme.spacing.sm,
+    marginTop: 2,
   },
   tipText: {
     flex: 1,

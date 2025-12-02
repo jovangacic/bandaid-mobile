@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { usePathname, useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 import {
@@ -35,7 +36,7 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
     }
   }, [visible]);
 
-  const handleNavigation = (route: '/home' | '/teleprompter' | '/metronome' | '/settings' | '/about' | '/help') => {
+  const handleNavigation = (route: '/home' | '/teleprompter' | '/gigs-calendar' | '/record-track' | '/settings' | '/about' | '/help') => {
     router.push(route as any);
     onClose();
   };
@@ -86,7 +87,7 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Menu</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Text style={styles.closeText}>✕</Text>
+              <Ionicons name="close" size={24} color={theme.colors.text} />
             </TouchableOpacity>
           </View>
 
@@ -108,19 +109,49 @@ export default function SideMenu({ visible, onClose }: SideMenuProps) {
               style={[styles.menuItem, isTeleprompterActive() && styles.activeMenuItem]}
               onPress={() => handleNavigation('/teleprompter')}
             >
-              <Text style={[styles.menuItemText, isTeleprompterActive() && styles.activeMenuItemText]}>
-                🎤 Teleprompter
-              </Text>
+              <View style={styles.menuItemContent}>
+                <Ionicons 
+                  name="mic" 
+                  size={20} 
+                  color={isTeleprompterActive() ? theme.colors.accent : theme.colors.text} 
+                />
+                <Text style={[styles.menuItemText, isTeleprompterActive() && styles.activeMenuItemText]}>
+                  Teleprompter
+                </Text>
+              </View>
             </TouchableOpacity>
 
-            {/* <TouchableOpacity 
-              style={[styles.menuItem, isActive('/metronome') && styles.activeMenuItem]}
-              onPress={() => handleNavigation('/metronome')}
+            <TouchableOpacity 
+              style={[styles.menuItem, isActive('/gigs-calendar') && styles.activeMenuItem]}
+              onPress={() => handleNavigation('/gigs-calendar')}
             >
-              <Text style={[styles.menuItemText, isActive('/metronome') && styles.activeMenuItemText]}>
-                🎵 Metronome
-              </Text>
-            </TouchableOpacity> */}
+              <View style={styles.menuItemContent}>
+                <Ionicons 
+                  name="calendar" 
+                  size={20} 
+                  color={isActive('/gigs-calendar') ? theme.colors.accent : theme.colors.text} 
+                />
+                <Text style={[styles.menuItemText, isActive('/gigs-calendar') && styles.activeMenuItemText]}>
+                  Gigs Calendar
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.menuItem, isActive('/record-track') && styles.activeMenuItem]}
+              onPress={() => handleNavigation('/record-track')}
+            >
+              <View style={styles.menuItemContent}>
+                <Ionicons 
+                  name="recording" 
+                  size={20} 
+                  color={isActive('/record-track') ? theme.colors.accent : theme.colors.text} 
+                />
+                <Text style={[styles.menuItemText, isActive('/record-track') && styles.activeMenuItemText]}>
+                  Record Track
+                </Text>
+              </View>
+            </TouchableOpacity>
 
             <View style={styles.divider} />
 
@@ -179,7 +210,7 @@ const styles = StyleSheet.create({
   },
   menuBottom: {
     width: '100%',
-    maxHeight: SCREEN_HEIGHT * 0.7,
+    maxHeight: SCREEN_HEIGHT * 0.85,
     left: 0,
     bottom: 0,
     borderTopLeftRadius: theme.borderRadius.lg,
@@ -211,7 +242,7 @@ const styles = StyleSheet.create({
   },
   menuContent: {
     padding: theme.spacing.md,
-    paddingBottom: 48,
+    paddingBottom: isSmallScreen ? 160 : 48,
   },
   menuItem: {
     paddingVertical: theme.spacing.md,
@@ -223,6 +254,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary + '20',
     borderRadius: theme.borderRadius.md,
     borderBottomColor: 'transparent',
+  },
+  menuItemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
   },
   menuItemText: {
     fontSize: 18,

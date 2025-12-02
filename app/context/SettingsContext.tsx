@@ -36,7 +36,11 @@ interface SettingsContextValue {
 
 const SettingsContext = createContext<SettingsContextValue | undefined>(undefined);
 
-export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface SettingsProviderProps {
+  children?: React.ReactNode;
+}
+
+export const SettingsProvider = ({ children }: SettingsProviderProps) => {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [isLoading, setIsLoading] = useState(true);
 

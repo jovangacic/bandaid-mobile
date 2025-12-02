@@ -325,7 +325,7 @@ export default function TextView() {
       >
         <GestureDetector gesture={pinchGesture}>
           <ScrollView
-            ref={scrollViewRef}
+            {...({ ref: scrollViewRef } as any)}
             style={styles.scrollView}
             contentContainerStyle={styles.contentContainer}
             showsVerticalScrollIndicator={false}

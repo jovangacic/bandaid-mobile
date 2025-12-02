@@ -1,13 +1,14 @@
-import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { Link, useRouter } from 'expo-router';
 import React from 'react';
 import {
-    Image,
-    Linking,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import GradientText from './components/GradientText';
 import Layout from './components/Layout';
@@ -72,56 +73,35 @@ export default function AboutScreen() {
             <Text style={styles.sectionTitle}>Available Tools</Text>
             
             <View style={styles.toolCard}>
-              <Text style={styles.toolName}>🎤 Teleprompter</Text>
+              <View style={styles.toolHeader}>
+                <Ionicons name="mic" size={24} color={theme.colors.primary} />
+                <Text style={styles.toolName}>Teleprompter</Text>
+              </View>
               <Text style={styles.toolDescription}>
                 Display scrolling lyrics and scripts during performances. Features customizable 
                 speed, font size, playlists, mirror mode, and drag-to-reorder.
               </Text>
             </View>
 
-            {/* <View style={styles.toolCard}>
-              <Text style={styles.toolName}>🎵 Metronome</Text>
+            <View style={styles.toolCard}>
+              <View style={styles.toolHeader}>
+                <Ionicons name="calendar" size={24} color={theme.colors.primary} />
+                <Text style={styles.toolName}>Gigs Calendar</Text>
+              </View>
               <Text style={styles.toolDescription}>
-                Practice with precision timing. Features adjustable BPM (40-240), multiple time 
-                signatures (2/4, 3/4, 4/4, 5/4, 6/8), visual beat indicators, and distinct sounds 
-                for downbeats.
-              </Text>
-            </View> */}
-          </View>
-
-          {/* FAQ */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>FAQ & Tips</Text>
-            
-            <View style={styles.faqCard}>
-              <Text style={styles.faqQuestion}>How do I adjust text size during performance?</Text>
-              <Text style={styles.faqAnswer}>
-                Use pinch gestures (pinch in/out) while viewing text in fullscreen mode to quickly 
-                adjust font size between 16-48px without leaving the performance view.
+                Organize and track your gigs and rehearsals. Schedule events with date and time, 
+                add descriptions, and get customizable reminders (7 days, 1 day, or hours before).
               </Text>
             </View>
 
-            <View style={styles.faqCard}>
-              <Text style={styles.faqQuestion}>Can I control scroll speed on the fly?</Text>
-              <Text style={styles.faqAnswer}>
-                Yes! In fullscreen mode, you'll see a speed slider on the right side. Slide it up/down 
-                to adjust scroll speed from 1-20 in real-time without interrupting your performance.
-              </Text>
-            </View>
-
-            <View style={styles.faqCard}>
-              <Text style={styles.faqQuestion}>How do I change screen orientation?</Text>
-              <Text style={styles.faqAnswer}>
-                Go to Settings and choose your preferred orientation: Auto-Rotate (follows device), 
-                Portrait Only, or Landscape Only. This setting applies across the entire app.
-              </Text>
-            </View>
-
-            <View style={styles.faqCard}>
-              <Text style={styles.faqQuestion}>What is Mirror Mode?</Text>
-              <Text style={styles.faqAnswer}>
-                Enable Mirror Mode in Settings to flip text horizontally. Perfect when placing your 
-                device behind glass or mirrors for a professional teleprompter setup.
+            <View style={styles.toolCard}>
+              <View style={styles.toolHeader}>
+                <Ionicons name="recording" size={24} color={theme.colors.primary} />
+                <Text style={styles.toolName}>Record Track</Text>
+              </View>
+              <Text style={styles.toolDescription}>
+                Record audio tracks with high quality. Features include section looping for practice.
+                Keep your song ideas organized within the app. 
               </Text>
             </View>
           </View>
@@ -130,44 +110,12 @@ export default function AboutScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Coming Soon</Text>
             <View style={styles.featureList}>
-              <Text style={styles.comingSoonItem}>🥁 Metronome - Practice with precision timing</Text>
-              <Text style={styles.comingSoonItem}>🎸 Tuner - Keep your instruments in tune</Text>
-              <Text style={styles.comingSoonItem}>📋 Gig Manager - Organize your gigs & rehearsals</Text>
-              <Text style={styles.comingSoonItem}>⏱️ Practice Timer - Track your practice sessions</Text>
+              <View style={styles.comingSoonContainer}>
+                <Ionicons name="timer" size={24} color={theme.colors.primary} />
+                <Text style={styles.comingSoonItem}>Practice Timer - Track your practice sessions</Text>
+              </View>
             </View>
           </View>
-
-          {/* Links */}
-          {/* <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Information</Text>
-            
-            <TouchableOpacity
-              style={styles.linkButton}
-              onPress={() => handleOpenLink('https://github.com')}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.linkText}>Privacy Policy</Text>
-              <Text style={styles.linkIcon}>›</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.linkButton}
-              onPress={() => handleOpenLink('https://github.com')}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.linkText}>Terms of Service</Text>
-              <Text style={styles.linkIcon}>›</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.linkButton}
-              onPress={() => handleOpenLink('https://github.com')}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.linkText}>Source Code</Text>
-              <Text style={styles.linkIcon}>›</Text>
-            </TouchableOpacity>
-          </View> */}
 
           {/* Credits */}
           <View style={styles.section}>
@@ -182,7 +130,7 @@ export default function AboutScreen() {
 
           {/* Copyright */}
           <View style={styles.footer}>
-            <Text style={styles.copyright}>© 2025 Bandaid by bend.rs</Text>
+            <Text style={styles.copyright}>© 2025 Bandaid by <Link href="https://bend.rs" target="_blank" rel="noopener noreferrer">bend.rs</Link></Text>
             <Text style={styles.copyright}>All rights reserved</Text>
           </View>
         </ScrollView>
@@ -291,19 +239,30 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.md,
     borderLeftWidth: 4,
     borderLeftColor: theme.colors.accent,
+    marginBottom: theme.spacing.md,
+  },
+  toolHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    marginBottom: theme.spacing.xs,
   },
   toolName: {
     fontSize: theme.typography.heading4,
     fontWeight: 'bold',
     color: theme.colors.text,
-    marginBottom: theme.spacing.xs,
   },
   toolDescription: {
     fontSize: theme.typography.label,
     color: theme.colors.textMuted,
     lineHeight: theme.typography.label * 1.47,
   },
+  comingSoonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+  },
   comingSoonItem: {
+    paddingLeft: theme.spacing.sm,
     fontSize: theme.typography.label,
     color: theme.colors.textMuted,
     lineHeight: theme.typography.label * 1.6,

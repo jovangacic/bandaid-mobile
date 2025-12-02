@@ -2,7 +2,7 @@
   "expo": {
     "name": "bandaid",
     "slug": "bandaid",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "bandaidmobile",
@@ -12,12 +12,13 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.thorn.bandaid",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSMicrophoneUsageDescription": "This app needs access to the microphone to record audio tracks."
       }
     },
     "android": {
       "package": "com.thorn.bandaid",
-      "versionCode": 5,
+      "versionCode": 6,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -25,7 +26,10 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "RECORD_AUDIO"
+      ]
     },
     "web": {
       "output": "static",
@@ -44,11 +48,22 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/android-icon-monochrome.png",
+          "color": "#8b5cf6",
+          "sounds": [
+            "./assets/sounds/notification.wav"
+          ],
+          "androidMode": "default",
+          "androidCollapsedTitle": "Bandaid"
+        }
       ]
     ],
     "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
+      "typedRoutes": true
     },
     "extra": {
       "router": {},

@@ -1,6 +1,7 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { Playlist } from '../models/Playlist';
 import { playlistStorage } from '../services/playlistStorage';
+import { showErrorToast, showSuccessToast } from '../utils/toast';
 
 interface PlaylistContextType {
   playlists: Playlist[];
@@ -25,7 +26,11 @@ interface PlaylistContextType {
 
 const PlaylistContext = createContext<PlaylistContextType | undefined>(undefined);
 
-export const PlaylistProvider = ({ children }: { children: ReactNode }) => {
+interface PlaylistProviderProps {
+  children?: ReactNode;
+}
+
+export const PlaylistProvider = ({ children }: PlaylistProviderProps) => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -175,9 +180,10 @@ export const PlaylistProvider = ({ children }: { children: ReactNode }) => {
       // Skip confirmation and delete directly
       try {
         await deletePlaylist(playlist.id);
+        showSuccessToast('Playlist deleted successfully');
         onSuccess();
       } catch (error) {
-        Alert.alert('Error', 'Failed to delete playlist');
+        showErrorToast('Failed to delete playlist');
       }
       return;
     }
@@ -195,9 +201,10 @@ export const PlaylistProvider = ({ children }: { children: ReactNode }) => {
           onPress: async () => {
             try {
               await deletePlaylist(playlist.id);
+              showSuccessToast('Playlist deleted successfully');
               onSuccess();
             } catch (error) {
-              Alert.alert('Error', 'Failed to delete playlist');
+              showErrorToast('Failed to delete playlist');
             }
           },
         },

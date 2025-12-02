@@ -1,6 +1,7 @@
 import React, { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { Text } from '../models/Text';
 import { textStorage } from '../services/textStorage';
+import { showErrorToast, showSuccessToast } from '../utils/toast';
 
 interface TextContextType {
   texts: Text[];
@@ -21,7 +22,11 @@ interface TextContextType {
 
 const TextContext = createContext<TextContextType | undefined>(undefined);
 
-export const TextProvider = ({ children }: { children: ReactNode }) => {
+interface TextProviderProps {
+  children?: ReactNode;
+}
+
+export const TextProvider = ({ children }: TextProviderProps) => {
   const [texts, setTexts] = useState<Text[]>([]);
   const [loading, setLoading] = useState(true);
   const saveTimeoutRef = useRef<any>(null);
@@ -156,9 +161,10 @@ export const TextProvider = ({ children }: { children: ReactNode }) => {
       // Skip confirmation and delete directly
       try {
         await deleteText(text.id);
+        showSuccessToast('Text deleted successfully');
         onSuccess();
       } catch (error) {
-        Alert.alert('Error', 'Failed to delete text');
+        showErrorToast('Failed to delete text');
       }
       return;
     }
@@ -174,9 +180,10 @@ export const TextProvider = ({ children }: { children: ReactNode }) => {
           onPress: async () => {
             try {
               await deleteText(text.id);
+              showSuccessToast('Text deleted successfully');
               onSuccess();
             } catch (error) {
-              Alert.alert('Error', 'Failed to delete text');
+              showErrorToast('Failed to delete text');
             }
           },
         },

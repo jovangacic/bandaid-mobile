@@ -3,16 +3,17 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
+import FormHeader from '../components/FormHeader';
 import Layout from '../components/Layout';
 import PlaylistSelectionModal from '../components/PlaylistSelectionModal';
 import { usePlaylists } from '../context/PlaylistContext';
@@ -20,6 +21,7 @@ import { useSettings } from '../context/SettingsContext';
 import { useTexts } from '../context/TextContext';
 import { createText } from '../models/Text';
 import theme from '../theme/colors';
+import { showErrorToast, showSuccessToast } from '../utils/toast';
 
 const MAX_CONTENT_LENGTH = 3000;
 
@@ -63,17 +65,17 @@ export default function AddText() {
   const handleSubmit = async () => {
     // Validation
     if (!title.trim()) {
-      Alert.alert('Error', 'Please enter a title');
+      showErrorToast('Please enter a title', 'Validation Error');
       return;
     }
 
     if (!content.trim()) {
-      Alert.alert('Error', 'Please enter some content');
+      showErrorToast('Please enter some content', 'Validation Error');
       return;
     }
 
     if (content.length > MAX_CONTENT_LENGTH) {
-      Alert.alert('Error', `Content must be less than ${MAX_CONTENT_LENGTH} characters`);
+      showErrorToast(`Content must be less than ${MAX_CONTENT_LENGTH} characters`, 'Validation Error');
       return;
     }
 
@@ -105,9 +107,10 @@ export default function AddText() {
         currentPlaylistIds
       );
       
+      showSuccessToast(`Text ${isEditing ? 'updated' : 'created'} successfully`);
       router.back();
     } catch (error) {
-      Alert.alert('Error', `Failed to ${isEditing ? 'update' : 'save'} text. Please try again.`);
+      showErrorToast(`Failed to ${isEditing ? 'update' : 'save'} text`);
       console.error(`Error ${isEditing ? 'updating' : 'saving'} text:`, error);
     } finally {
       setIsSubmitting(false);
@@ -148,20 +151,16 @@ export default function AddText() {
         style={styles.container}
         keyboardVerticalOffset={0}
       >
+        <FormHeader
+          title={isEditing ? 'Edit Text' : 'Add Text'}
+          onCancel={handleCancel}
+        />
+
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Header */}
-          <View style={styles.header}>
-            <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
-              <Text style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>{isEditing ? 'Edit Text' : 'New Text'}</Text>
-            <View style={styles.placeholder} />
-          </View>
-
           {/* Title Input */}
           <View style={styles.section}>
             <Text style={styles.label}>Title</Text>
@@ -334,27 +333,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: theme.spacing.md,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: theme.spacing.lg,
-  },
-  cancelButton: {
-    padding: theme.spacing.xs,
-  },
-  cancelText: {
-    color: theme.colors.accent,
-    fontSize: 16,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: theme.colors.text,
-  },
-  placeholder: {
-    width: 60,
   },
   section: {
     marginBottom: theme.spacing.lg,

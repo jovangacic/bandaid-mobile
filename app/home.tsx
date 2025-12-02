@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
@@ -17,7 +18,7 @@ import theme, { colors } from './theme/colors';
 interface Tool {
   id: string;
   name: string;
-  icon: string;
+  icon: keyof typeof Ionicons.glyphMap;
   description: string;
   route: string;
   available: boolean;
@@ -27,39 +28,31 @@ const TOOLS: Tool[] = [
   {
     id: 'teleprompter',
     name: 'Teleprompter',
-    icon: '🎤',
+    icon: 'mic',
     description: 'The on-stage assistant who never forgets your lines',
     route: '/teleprompter',
     available: true,
   },
   {
-    id: 'metronome',
-    name: 'Metronome',
-    icon: '🥁',
-    description: 'Practice with precision timing',
-    route: '/metronome',
-    available: false,
-  },
-  {
-    id: 'tuner',
-    name: 'Tuner',
-    icon: '🎸',
-    description: 'Keep your instruments in tune',
-    route: '/tuner',
-    available: false,
-  },
-  {
-    id: 'gig-manager',
-    name: 'Gig Manager',
-    icon: '📋',
+    id: 'gigs-calendar',
+    name: 'Gigs Calendar',
+    icon: 'calendar',
     description: 'Organize your gigs & rehearsals',
-    route: '/gig-manager',
-    available: false,
+    route: '/gigs-calendar',
+    available: true,
+  },
+  {
+    id: 'record-track',
+    name: 'Record Track',
+    icon: 'recording',
+    description: 'Record, loop, and listen to your audio tracks',
+    route: '/record-track',
+    available: true,
   },
   {
     id: 'practice-timer',
     name: 'Practice Timer',
-    icon: '⏱️',
+    icon: 'timer',
     description: 'Track your practice sessions',
     route: '/practice-timer',
     available: false,
@@ -111,7 +104,11 @@ export default function ToolsHome() {
                 activeOpacity={0.7}
               >
                 <View style={styles.toolHeader}>
-                  <Text style={styles.toolIcon}>{tool.icon}</Text>
+                  <Ionicons 
+                    name={tool.icon} 
+                    size={48} 
+                    color={!tool.available ? theme.colors.textMuted : theme.colors.primary}
+                  />
                   {!tool.available && (
                     <View style={styles.comingSoonBadge}>
                       <Text style={styles.comingSoonText}>Soon</Text>
