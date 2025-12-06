@@ -19,7 +19,16 @@ export const gigStorage = {
   async getAllGigs(): Promise<Gig[]> {
     try {
       const data = await AsyncStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
+      const gigs = data ? JSON.parse(data) : [];
+      
+      // Always sort by date and time ascending (nearest event first)
+      gigs.sort((a: Gig, b: Gig) => {
+        const dateA = new Date(`${a.date}T${a.time}`);
+        const dateB = new Date(`${b.date}T${b.time}`);
+        return dateA.getTime() - dateB.getTime();
+      });
+      
+      return gigs;
     } catch (error) {
       console.error('Error loading gigs:', error);
       return [];
@@ -87,8 +96,8 @@ export const gigStorage = {
 
     // Schedule 7 days before
     if (gig.reminderSettings.sevenDaysBefore) {
-      const sevenDaysBefore = new Date(gigDateTime);
-      sevenDaysBefore.setDate(sevenDaysBefore.getDate() - 7);
+      // Calculate exact time by subtracting milliseconds (7 days = 7 * 24 * 60 * 60 * 1000)
+      const sevenDaysBefore = new Date(gigDateTime.getTime() - (7 * 24 * 60 * 60 * 1000));
       
       if (sevenDaysBefore > now) {
         await Notifications.scheduleNotificationAsync({
@@ -105,8 +114,8 @@ export const gigStorage = {
 
     // Schedule 1 day before
     if (gig.reminderSettings.oneDayBefore) {
-      const oneDayBefore = new Date(gigDateTime);
-      oneDayBefore.setDate(oneDayBefore.getDate() - 1);
+      // Calculate exact time by subtracting milliseconds (1 day = 24 * 60 * 60 * 1000)
+      const oneDayBefore = new Date(gigDateTime.getTime() - (24 * 60 * 60 * 1000));
       
       if (oneDayBefore > now) {
         await Notifications.scheduleNotificationAsync({
@@ -123,8 +132,8 @@ export const gigStorage = {
 
     // Schedule hours before
     for (const hours of gig.reminderSettings.hoursBeforeOptions) {
-      const hoursBefore = new Date(gigDateTime);
-      hoursBefore.setHours(hoursBefore.getHours() - hours);
+      // Calculate exact time by subtracting milliseconds to preserve exact time
+      const hoursBefore = new Date(gigDateTime.getTime() - (hours * 60 * 60 * 1000));
       
       if (hoursBefore > now) {
         await Notifications.scheduleNotificationAsync({
@@ -136,6 +145,7 @@ export const gigStorage = {
           trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: hoursBefore },
           identifier: `${gig.id}-${hours}hours`,
         });
+        console.log(`Scheduled ${hours}h notification for ${hoursBefore.toLocaleString()} (Gig at ${gigDateTime.toLocaleString()})`);
       }
     }
   },

@@ -2,7 +2,7 @@
   "expo": {
     "name": "bandaid",
     "slug": "bandaid",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "bandaidmobile",
@@ -18,7 +18,7 @@
     },
     "android": {
       "package": "com.thorn.bandaid",
-      "versionCode": 6,
+      "versionCode": 7,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
