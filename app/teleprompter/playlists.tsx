@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FloatingActionButton from '../components/FloatingActionButton';
+import SearchInput from '../components/SearchInput';
 import { usePlaylists } from '../context/PlaylistContext';
-import { useTexts } from '../context/TextContext';
 import { Playlist } from '../models/Playlist';
 import theme from '../theme/colors';
 import TeleprompterLayout from './TeleprompterLayout';
@@ -11,7 +11,13 @@ import TeleprompterLayout from './TeleprompterLayout';
 export default function PlaylistsScreen() {
   const router = useRouter();
   const { playlists } = usePlaylists();
-  const { texts } = useTexts();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredPlaylists = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return playlists;
+    return playlists.filter((p) => (p.name || '').toLowerCase().includes(q));
+  }, [playlists, searchQuery]);
 
   const getTextCountForPlaylist = (playlist: Playlist) => {
     return playlist.textIds.length;
@@ -67,17 +73,23 @@ export default function PlaylistsScreen() {
   };
 
   return (
-    <TeleprompterLayout title="Playlists" count={playlists.length}>
-      {playlists.length === 0 ? (
+    <TeleprompterLayout title="Playlists" count={filteredPlaylists.length}>
+      <SearchInput value={searchQuery} onChangeText={setSearchQuery} placeholder="Search playlists..." />
+
+      {filteredPlaylists.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No playlists yet</Text>
-          <Text style={styles.emptySubtext}>
-            Tap the + button to create your first playlist
+          <Text style={styles.emptyText}>
+            {playlists.length === 0 ? 'No playlists yet' : 'No playlists found'}
           </Text>
+          {playlists.length === 0 && (
+            <Text style={styles.emptySubtext}>
+              Tap the + button to create your first playlist
+            </Text>
+          )}
         </View>
       ) : (
         <FlatList
-          data={playlists}
+          data={filteredPlaylists}
           renderItem={renderPlaylistItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
@@ -90,6 +102,33 @@ export default function PlaylistsScreen() {
 }
 
 const styles = StyleSheet.create({
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: theme.spacing.md,
+    marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.xs,
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.backgroundLight,
+  },
+  searchInput: {
+    flex: 1,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    color: theme.colors.text,
+  },
+  clearButton: {
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: theme.spacing.xs,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  clearButtonText: {
+    fontSize: 16,
+    color: theme.colors.textMuted,
+  },
   listContent: {
     padding: theme.spacing.md,
     paddingBottom: 160, // Space for floating action button and bottom nav

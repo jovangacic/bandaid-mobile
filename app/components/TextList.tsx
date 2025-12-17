@@ -12,6 +12,7 @@ interface TextListProps {
   onTextPress: (text: TextType) => void;
   onReorder?: (texts: TextType[]) => void;
   onEdit?: (text: TextType) => void;
+  enableDrag?: boolean;
 }
 
 const formatDate = (date: Date) => {
@@ -22,7 +23,7 @@ const formatDate = (date: Date) => {
   });
 };
 
-const TextList = ({ texts, onTextPress, onReorder, onEdit }: TextListProps) => {
+const TextList = ({ texts, onTextPress, onReorder, onEdit, enableDrag = true }: TextListProps) => {
   const { playlists } = usePlaylists();
   
   // Memoize playlist lookup to avoid recalculating on every render
@@ -40,7 +41,7 @@ const TextList = ({ texts, onTextPress, onReorder, onEdit }: TextListProps) => {
       <ScaleDecorator>
         <TouchableOpacity
           onPress={() => onTextPress(item)}
-          onLongPress={drag}
+          onLongPress={enableDrag ? drag : undefined}
           disabled={isActive}
           activeOpacity={0.7}
         >
@@ -108,7 +109,7 @@ const TextList = ({ texts, onTextPress, onReorder, onEdit }: TextListProps) => {
         </TouchableOpacity>
       </ScaleDecorator>
     );
-  }, [textPlaylistsMap, onTextPress, onEdit]);
+  }, [textPlaylistsMap, onTextPress, onEdit, enableDrag]);
 
   const handleDragEnd = useCallback(({ data }: { data: TextType[] }) => {
     onReorder?.(data);
@@ -131,10 +132,10 @@ const TextList = ({ texts, onTextPress, onReorder, onEdit }: TextListProps) => {
         data={texts}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
-        onDragEnd={handleDragEnd}
+        onDragEnd={enableDrag ? handleDragEnd : undefined}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
-        activationDistance={10}
+        activationDistance={enableDrag ? 10 : Number.MAX_SAFE_INTEGER}
         containerStyle={{ flex: 1 }}
       />
     </GestureHandlerRootView>
