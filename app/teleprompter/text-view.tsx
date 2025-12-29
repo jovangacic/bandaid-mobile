@@ -31,9 +31,6 @@ export default function TextView() {
   const [contentHeight, setContentHeight] = useState(0);
   const [scrollViewHeight, setScrollViewHeight] = useState(0);
   const scrollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const touchStartYRef = useRef(0);
-  const touchStartXRef = useRef(0);
-  const hasDraggedRef = useRef(false);
   const wasScrollingBeforeDragRef = useRef(false); // Track if autoscrolling was active before manual scroll
   const baseFontSizeRef = useRef(24);
   const [tempFontSize, setTempFontSize] = useState<number | null>(null);
@@ -126,45 +123,6 @@ export default function TextView() {
 
   const toggleScrolling = () => {
     setIsScrolling(prev => !prev);
-  };
-
-  const handleTouchStart = (event: any) => {
-    touchStartYRef.current = event.nativeEvent.pageY;
-    touchStartXRef.current = event.nativeEvent.pageX;
-    hasDraggedRef.current = false;
-  };
-
-  const handleTouchMove = () => {
-    hasDraggedRef.current = true;
-  };
-
-  const handleTouchEnd = (event: any) => {
-    const touchEndY = event.nativeEvent.pageY;
-    const touchEndX = event.nativeEvent.pageX;
-    const touchDeltaY = Math.abs(touchEndY - touchStartYRef.current);
-    const touchDeltaX = touchEndX - touchStartXRef.current;
-    const absTouchDeltaX = Math.abs(touchDeltaX);
-    
-    // Check if it's a horizontal swipe (more horizontal than vertical movement)
-    if (hasDraggedRef.current && absTouchDeltaX > 50 && absTouchDeltaX > touchDeltaY) {
-      // Swipe right - go to previous text
-      if (touchDeltaX > 0 && hasPrevious) {
-        stopAutoScroll();
-        router.replace(`/teleprompter/text-view?id=${texts[currentIndex - 1].id}` as any);
-        return;
-      }
-      // Swipe left - go to next text
-      if (touchDeltaX < 0 && hasNext) {
-        stopAutoScroll();
-        router.replace(`/teleprompter/text-view?id=${texts[currentIndex + 1].id}` as any);
-        return;
-      }
-    }
-    
-    // If user didn't drag (just tapped), toggle play/pause
-    if (!hasDraggedRef.current && touchDeltaY < 10) {
-      toggleScrolling();
-    }
   };
 
   const handleScrollBeginDrag = () => {
@@ -317,12 +275,7 @@ export default function TextView() {
       </View>
 
       {/* Teleprompter Content */}
-      <View 
-        style={[styles.touchableArea, settings.mirrorMode && styles.mirrorContainer]}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
+      <View style={[styles.touchableArea, settings.mirrorMode && styles.mirrorContainer]}>
         <GestureDetector gesture={pinchGesture}>
           <ScrollView
             {...({ ref: scrollViewRef } as any)}
@@ -337,12 +290,19 @@ export default function TextView() {
             onScroll={handleScroll}
             scrollEventThrottle={16}
           >
-            <Text style={[styles.contentText, { 
-              fontSize: tempFontSize || text.fontSize || 24, 
-              lineHeight: (tempFontSize || text.fontSize || 24) * 1.5 
-            }]}>
-              {text.content}
-            </Text>
+            <TouchableOpacity
+              style={styles.textTouchArea}
+              activeOpacity={1}
+              onPress={toggleScrolling}
+              onPressIn={() => {}}
+            >
+              <Text style={[styles.contentText, { 
+                fontSize: tempFontSize || text.fontSize || 24, 
+                lineHeight: (tempFontSize || text.fontSize || 24) * 1.5 
+              }]}>
+                {text.content}
+              </Text>
+            </TouchableOpacity>
             
             {/* Extra space at bottom so text can scroll completely off screen */}
             {isScrollable && <View style={styles.bottomSpacer} />}
@@ -440,6 +400,10 @@ const styles = StyleSheet.create({
   },
   touchableArea: {
     flex: 1,
+  },
+  textTouchArea: {
+    minHeight: '100%',
+    justifyContent: 'flex-start',
   },
   mirrorContainer: {
     transform: [{ scaleX: -1 }],
