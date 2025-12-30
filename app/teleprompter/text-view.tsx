@@ -31,6 +31,8 @@ export default function TextView() {
   const [contentHeight, setContentHeight] = useState(0);
   const [scrollViewHeight, setScrollViewHeight] = useState(0);
   const scrollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
   const wasScrollingBeforeDragRef = useRef(false); // Track if autoscrolling was active before manual scroll
   const baseFontSizeRef = useRef(24);
   const [tempFontSize, setTempFontSize] = useState<number | null>(null);
@@ -123,6 +125,41 @@ export default function TextView() {
 
   const toggleScrolling = () => {
     setIsScrolling(prev => !prev);
+  };
+
+  const handleTouchStart = (event: any) => {
+    touchStartXRef.current = event.nativeEvent.pageX;
+    touchStartYRef.current = event.nativeEvent.pageY;
+  };
+
+  const handleTouchEnd = (event: any) => {
+    const touchEndX = event.nativeEvent.pageX;
+    const touchEndY = event.nativeEvent.pageY;
+    const deltaX = touchEndX - touchStartXRef.current;
+    const deltaY = touchEndY - touchStartYRef.current;
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(deltaY);
+    
+    // Very forgiving horizontal swipe detection
+    if (absDeltaX > 20 && absDeltaX > absDeltaY * 0.3) {
+      // Swipe right - go to previous text
+      if (deltaX > 0 && hasPrevious) {
+        stopAutoScroll();
+        router.replace(`/teleprompter/text-view?id=${texts[currentIndex - 1].id}` as any);
+        return;
+      }
+      // Swipe left - go to next text
+      if (deltaX < 0 && hasNext) {
+        stopAutoScroll();
+        router.replace(`/teleprompter/text-view?id=${texts[currentIndex + 1].id}` as any);
+        return;
+      }
+    }
+    
+    // If it's a tap (small movement), toggle play/pause
+    if (absDeltaX < 20 && absDeltaY < 20) {
+      toggleScrolling();
+    }
   };
 
   const handleScrollBeginDrag = () => {
@@ -275,7 +312,11 @@ export default function TextView() {
       </View>
 
       {/* Teleprompter Content */}
-      <View style={[styles.touchableArea, settings.mirrorMode && styles.mirrorContainer]}>
+      <View 
+        style={[styles.touchableArea, settings.mirrorMode && styles.mirrorContainer]}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <GestureDetector gesture={pinchGesture}>
           <ScrollView
             {...({ ref: scrollViewRef } as any)}
@@ -293,7 +334,7 @@ export default function TextView() {
             <TouchableOpacity
               style={styles.textTouchArea}
               activeOpacity={1}
-              onPress={toggleScrolling}
+              onPress={() => {}} // Remove onPress to prevent double handling
               onPressIn={() => {}}
             >
               <Text style={[styles.contentText, { 
