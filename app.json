@@ -2,9 +2,9 @@
   "expo": {
     "name": "bandaid",
     "slug": "bandaid",
-    "version": "1.0.9",
+    "version": "1.0.11",
     "orientation": "default",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/bandaid-sign-04.png",
     "scheme": "bandaidmobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -18,7 +18,7 @@
     },
     "android": {
       "package": "com.thorn.bandaid",
-      "versionCode": 10,
+      "versionCode": 12,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -33,26 +33,23 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/bandaid-sign-04.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "image": "./assets/images/bandaid-sign-04.png",
+          "imageWidth": 150,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "dark": {
-            "backgroundColor": "#000000"
-          }
+          "backgroundColor": "#000"
         }
       ],
       [
         "expo-notifications",
         {
-          "icon": "./assets/images/android-icon-monochrome.png",
+          "icon": "./assets/images/bandaid-sign-04.png",
           "color": "#8b5cf6",
           "sounds": [
             "./assets/sounds/notification.wav"
