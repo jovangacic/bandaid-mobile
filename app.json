@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "bandaid",
+    "name": "Bandaid",
     "slug": "bandaid",
-    "version": "1.0.11",
+    "version": "1.0.12",
     "orientation": "default",
     "icon": "./assets/images/bandaid-sign-04.png",
     "scheme": "bandaidmobile",
@@ -18,12 +18,10 @@
     },
     "android": {
       "package": "com.thorn.bandaid",
-      "versionCode": 12,
+      "versionCode": 13,
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -49,10 +47,10 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/images/bandaid-sign-04.png",
+          "icon": "./assets/images/adaptive-icon-notification.png",
           "color": "#8b5cf6",
           "sounds": [
-            "./assets/sounds/notification.wav"
+            "./assets/sounds/rain.wav"
           ],
           "androidMode": "default",
           "androidCollapsedTitle": "Bandaid"

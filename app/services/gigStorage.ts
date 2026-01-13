@@ -7,7 +7,6 @@ const STORAGE_KEY = '@bandaid_gigs';
 // Configure notification handler
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
     shouldShowBanner: true,
@@ -16,6 +15,7 @@ Notifications.setNotificationHandler({
 });
 
 export const gigStorage = {
+
   async getAllGigs(): Promise<Gig[]> {
     try {
       const data = await AsyncStorage.getItem(STORAGE_KEY);

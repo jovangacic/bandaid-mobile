@@ -56,7 +56,7 @@ const FAQ_DATA: FAQItem[] = [
   },
   {
     question: 'How do I adjust font size?',
-    answer: 'Each text has its own font size setting. You can adjust it when creating or editing the text. You can also set a default font size in Settings.',
+    answer: 'Each text has its own font size setting. You can adjust it when creating or editing the text. You can also set a default font size in Settings. You can also control font size during playback by pinching in or out on the screen.',
   },
 ];
 
@@ -147,6 +147,18 @@ export default function HelpScreen() {
                   <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
                   <Text style={styles.tipText}>
                     Press and hold to reorder texts in your lists or playlists
+                  </Text>
+                </View>
+                  <View style={styles.tipItem}>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
+                  <Text style={styles.tipText}>
+                    Pinch in or out on the playback screen to quickly adjust font size
+                  </Text>
+                </View>
+                  <View style={styles.tipItem}>
+                  <Ionicons name="bulb" size={20} color={theme.colors.accent} style={styles.tipIconStyle} />
+                  <Text style={styles.tipText}>
+                    Drag to right or left on the playback screen to go to the next or previous text
                   </Text>
                 </View>
               </View>
